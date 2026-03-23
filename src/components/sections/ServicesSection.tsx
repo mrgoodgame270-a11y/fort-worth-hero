@@ -3,9 +3,8 @@ import { Zap, Search, Droplets, Thermometer, GitBranch, Wrench } from "lucide-re
 import { SERVICES } from "@/lib/constants";
 import { fadeUp, staggerContainer } from "@/lib/animations";
 
-const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  Zap, Search, Droplets, Thermometer, GitBranch, Wrench,
-};
+const iconMap = { Zap, Search, Droplets, Thermometer, GitBranch, Wrench } as const;
+type IconKey = keyof typeof iconMap;
 
 const ServicesSection = () => (
   <section id="services" className="bg-plumb-soft py-20 md:py-28">
