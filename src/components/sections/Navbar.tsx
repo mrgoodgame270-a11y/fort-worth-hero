@@ -42,7 +42,7 @@ const Navbar = () => {
               key={link.href}
               href={link.href}
               className={`text-sm font-medium transition-all duration-200 border-b-2 border-transparent hover:border-plumb-yellow pb-1 ${
-                link.highlight
+                "highlight" in link && link.highlight
                   ? "text-plumb-yellow font-semibold"
                   : "text-white/80 hover:text-white"
               }`}

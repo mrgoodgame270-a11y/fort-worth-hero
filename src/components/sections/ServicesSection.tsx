@@ -27,7 +27,7 @@ const ServicesSection = () => (
         viewport={{ once: true }}
       >
         {SERVICES.map((s) => {
-          const Icon = iconMap[s.icon];
+          const Icon = iconMap[s.icon as IconKey];
           return (
             <motion.div
               key={s.title}
