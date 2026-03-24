@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -28,8 +28,9 @@
     --radius: 0.75rem;
 
     /* PlumbHero Brand */
-    --plumb-deep: 213 70% 15%;
-    --plumb-yellow: 43 100% 49%;
+    --plumb-deep: 226 50% 8%; /* #0A0F1E */
+    --plumb-yellow: 47 92% 53%; /* #F5C518 */
+    --plumb-cyan: 190 100% 50%; /* #00D4FF */
     --plumb-dark: 213 80% 6%;
     --plumb-soft: 210 33% 98%;
 
@@ -49,8 +50,14 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-[#0A0F1E] text-foreground antialiased overflow-x-hidden;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Bebas Neue', cursive;
   }
   html {
     scroll-behavior: smooth;
@@ -66,8 +73,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 40px rgba(255,184,0,0.5)); }
-  50% { transform: scale(1.03); filter: drop-shadow(0 0 60px rgba(255,184,0,0.7)); }
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 40px rgba(245,197,24,0.5)); }
+  50% { transform: scale(1.03); filter: drop-shadow(0 0 60px rgba(245,197,24,0.7)); }
 }
 
 @keyframes bounce-gentle {
@@ -78,6 +85,18 @@
 @keyframes ping-ring {
   0% { transform: scale(1); opacity: 0.6; }
   100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes pulse-ring-dot {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+@keyframes ring-whatsapp {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }
 
 .animate-pulse-glow {
@@ -93,14 +112,11 @@
 }
 
 .animate-ping-ring-dot {
-  box-shadow: 0 0 0 0 rgba(239,68,68,0.7);
   animation: pulse-ring-dot 1.5s infinite;
 }
 
-@keyframes pulse-ring-dot {
-  0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
-  100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+.animate-ring-whatsapp {
+  animation: ring-whatsapp 2s infinite;
 }
 
 .animate-ring-shake {

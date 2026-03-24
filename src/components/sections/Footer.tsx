@@ -1,56 +1,86 @@
-import { Phone, Mail, MapPin } from "lucide-react";
-import { COMPANY } from "@/lib/constants";
+import { COMPANY, NAV_LINKS } from "@/lib/constants";
+import { Phone, Mail, MapPin, ShieldCheck, Clock, Facebook, Instagram, Twitter } from "lucide-react";
 
 const Footer = () => (
-  <footer className="bg-plumb-dark">
-    <div className="h-[3px] bg-plumb-yellow" />
-    <div className="container mx-auto px-4 py-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+  <footer className="bg-plumb-deep text-white pt-20 pb-10">
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
         {/* Brand */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <img src="/logo.png" alt="PlumbHero" className="w-14 h-14" />
-            <span className="text-2xl font-bold"><span className="text-white">Plumb</span><span className="text-plumb-yellow">Hero</span></span>
-          </div>
-          <p className="text-white/50 text-sm leading-relaxed">{COMPANY.tagline}</p>
-        </div>
-
-        {/* Services */}
-        <div>
-          <h4 className="text-plumb-yellow font-bold uppercase text-sm mb-4">Our Services</h4>
-          {["Emergency Repairs", "Leak Detection", "Drain Cleaning", "Water Heaters", "Sewer Lines", "Pipe Repiping"].map(s => (
-            <a key={s} href="#services" className="block text-white/60 text-sm hover:text-plumb-yellow transition-colors py-1">{s}</a>
-          ))}
-        </div>
-
-        {/* Contact */}
-        <div>
-          <h4 className="text-plumb-yellow font-bold uppercase text-sm mb-4">Contact</h4>
-          <div className="space-y-3 text-sm">
-            <div className="flex items-center gap-2"><Phone size={14} className="text-plumb-yellow" /><a href={COMPANY.phoneTel} className="text-white/60 hover:text-plumb-yellow transition-colors">{COMPANY.phone}</a></div>
-            <div className="flex items-center gap-2"><Mail size={14} className="text-plumb-yellow" /><span className="text-white/60">{COMPANY.email}</span></div>
-            <div className="flex items-start gap-2"><MapPin size={14} className="text-plumb-yellow mt-0.5" /><span className="text-white/60">{COMPANY.address}</span></div>
-          </div>
-        </div>
-
-        {/* Emergency CTA */}
-        <div className="bg-plumb-yellow/10 border border-plumb-yellow/20 rounded-2xl p-6">
-          <h4 className="text-white font-bold text-lg mb-2">24/7 Emergency Plumbing</h4>
-          <p className="text-white/60 text-sm mb-4">Plumbing emergency? Don't wait.</p>
-          <a href={COMPANY.phoneTel} className="block text-plumb-yellow text-2xl font-black mb-4">{COMPANY.phone}</a>
-          <a href="#booking" className="block bg-plumb-yellow text-plumb-deep font-bold text-center py-3 rounded-xl hover:bg-yellow-400 transition-colors">
-            Book Now
+        <div className="flex flex-col gap-6">
+          <a href="#" className="flex items-center gap-3">
+            <img src="/logo.png" alt="PlumbHero Footer Logo" className="h-12 w-auto" />
+            <span className="font-heading text-2xl tracking-wider">PLUMBHERO</span>
           </a>
-          <p className="text-white/40 text-xs mt-3 text-center">Available 24/7/365</p>
+          <p className="text-white/50 leading-relaxed font-medium">
+            Fort Worth's most trusted emergency plumbers. Licensed, insured, and available 24/7 to keep your home safe.
+          </p>
+          <div className="flex gap-4">
+            <a href="#" className="p-3 bg-white/5 rounded-full hover:bg-plumb-yellow hover:text-plumb-deep transition-all"><Facebook size={20} /></a>
+            <a href="#" className="p-3 bg-white/5 rounded-full hover:bg-plumb-yellow hover:text-plumb-deep transition-all"><Instagram size={20} /></a>
+            <a href="#" className="p-3 bg-white/5 rounded-full hover:bg-plumb-yellow hover:text-plumb-deep transition-all"><Twitter size={20} /></a>
+          </div>
+        </div>
+
+        {/* Quick Links */}
+        <div>
+          <h4 className="text-lg font-bold mb-6 text-plumb-yellow uppercase tracking-widest">Quick Links</h4>
+          <ul className="space-y-4">
+            {NAV_LINKS.map(link => (
+              <li key={link.label}>
+                <a href={link.href} className="text-white/60 hover:text-plumb-yellow transition-colors font-medium flex items-center gap-2 group">
+                  <div className="w-1.5 h-1.5 rounded-full bg-plumb-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Contact Info */}
+        <div>
+          <h4 className="text-lg font-bold mb-6 text-plumb-yellow uppercase tracking-widest">Contact Us</h4>
+          <ul className="space-y-4">
+            <li className="flex items-start gap-3">
+              <MapPin className="text-plumb-yellow shrink-0" size={20} />
+              <span className="text-white/60 font-medium">{COMPANY.address}</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <Phone className="text-plumb-yellow shrink-0" size={20} />
+              <a href={COMPANY.phoneTel} className="text-white/60 hover:text-plumb-yellow transition-colors font-medium">{COMPANY.phone}</a>
+            </li>
+            <li className="flex items-center gap-3">
+              <Mail className="text-plumb-yellow shrink-0" size="20" />
+              <a href={`mailto:${COMPANY.email}`} className="text-white/60 hover:text-plumb-yellow transition-colors font-medium">{COMPANY.email}</a>
+            </li>
+          </ul>
+        </div>
+
+        {/* Trust */}
+        <div>
+          <h4 className="text-lg font-bold mb-6 text-plumb-yellow uppercase tracking-widest">Trust & Safety</h4>
+          <div className="space-y-4">
+            <div className="bg-white/5 p-4 rounded-2xl flex items-center gap-4">
+              <ShieldCheck className="text-plumb-yellow" size={32} />
+              <div>
+                <p className="font-bold text-sm">Licensed & Insured</p>
+                <p className="text-xs text-white/40">Registered in Texas</p>
+              </div>
+            </div>
+            <div className="bg-white/5 p-4 rounded-2xl flex items-center gap-4">
+              <Clock className="text-plumb-yellow" size={32} />
+              <div>
+                <p className="font-bold text-sm">24/7 Response</p>
+                <p className="text-xs text-white/40">Always available</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    {/* Bottom */}
-    <div className="border-t border-white/10">
-      <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-white/30 text-xs gap-2">
-        <span>© 2025 PlumbHero LLC. All rights reserved. Licensed & Insured in Texas.</span>
-        <span>Made in Fort Worth, TX 🤠</span>
+      <div className="pt-10 border-t border-white/5 text-center">
+        <p className="text-white/30 text-sm font-medium">
+          © {new Date().getFullYear()} {COMPANY.name}. All rights reserved. Designed for excellence.
+        </p>
       </div>
     </div>
   </footer>

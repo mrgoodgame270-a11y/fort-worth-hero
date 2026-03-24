@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { COMPANY, REVIEWS } from "@/lib/constants";
 import { fadeUp, staggerContainer } from "@/lib/animations";
+import ReviewForm from "@/components/ReviewForm";
 
 const ReviewsSection = () => (
   <section id="reviews" className="bg-plumb-deep py-20 md:py-28">
@@ -52,6 +53,9 @@ const ReviewsSection = () => (
           </motion.div>
         ))}
       </motion.div>
+
+      {/* Review Form Component */}
+      <ReviewForm />
     </div>
   </section>
 );

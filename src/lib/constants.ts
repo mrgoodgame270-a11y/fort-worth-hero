@@ -1,13 +1,13 @@
 export const COMPANY = {
   name: "PlumbHero",
   tagline: "Fort Worth's Most Trusted Emergency Plumbers",
-  phone: "(817) 470-8920",
-  phoneTel: "tel:+18174708920",
-  email: "info@plumbhero.com",
-  address: "10325 Harmon Rd Ste 605, Fort Worth, TX 76177",
-  googleRating: 4.6,
-  reviewCount: 27,
-  serviceArea: "Fort Worth, TX and surrounding DFW Metroplex",
+  phone: process.env.NEXT_PUBLIC_PHONE || "(817) 470-8920",
+  phoneTel: `tel:${(process.env.NEXT_PUBLIC_PHONE || "(817) 470-8920").replace(/\D/g, "")}`,
+  email: process.env.NEXT_PUBLIC_EMAIL || "info@plumbhero.com",
+  address: process.env.NEXT_PUBLIC_ADDRESS || "10325 Harmon Rd Ste 605, Fort Worth, TX 76177",
+  googleRating: 4.8,
+  reviewCount: 150,
+  serviceArea: "Fort Worth, Texas",
   usp: "24/7 Emergency Plumbing — 30 Minute Response Guaranteed",
   years: "10+",
   jobsDone: "1,000+",
@@ -31,21 +31,52 @@ export const NAV_LINKS = [
 ] as const;
 
 export const SERVICES = [
-  { icon: "Zap", title: "Emergency Plumbing Repairs", desc: "Burst pipes, flooding, gas leaks — we dispatch certified plumbers to your door in 30 minutes or less, any hour of the day." },
-  { icon: "Search", title: "Leak Detection & Repair", desc: "State-of-the-art acoustic and thermal leak detection technology finds hidden leaks behind walls and under slabs without demolition." },
-  { icon: "Droplets", title: "Drain Cleaning & Unclogging", desc: "Hydro-jetting, snake, and camera inspection to permanently clear and diagnose slow or completely blocked drains." },
-  { icon: "Thermometer", title: "Water Heater Services", desc: "Installation, repair, and replacement of tank and tankless water heaters. Same-day service available — no cold showers." },
-  { icon: "GitBranch", title: "Sewer Line Repair", desc: "Full sewer line inspection, repair, and trenchless replacement. We restore flow without tearing up your lawn." },
-  { icon: "Wrench", title: "Pipe Installation & Repiping", desc: "Whole-home and commercial repiping using PEX, copper, or CPVC. Increase water pressure and eliminate corroded pipes." },
+  { 
+    icon: "Zap", 
+    title: "Emergency Plumbing", 
+    desc: "24/7 emergency service for burst pipes, flooding, and urgent repairs in Fort Worth.",
+    img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80"
+  },
+  { 
+    icon: "Droplets", 
+    title: "Drain Cleaning", 
+    desc: "Professional drain cleaning and unclogging services to restore your flow instantly.",
+    img: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&q=80"
+  },
+  { 
+    icon: "Search", 
+    title: "Leak Detection", 
+    desc: "Advanced acoustic and thermal leak detection to find hidden issues without demolition.",
+    img: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=800&q=80"
+  },
+  { 
+    icon: "Wrench", 
+    title: "Pipe Repair", 
+    desc: "Expert pipe installation, repair, and repiping using high-quality materials.",
+    img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80"
+  },
+  { 
+    icon: "Thermometer", 
+    title: "Water Heater Repair", 
+    desc: "Installation and repair of tank and tankless water heaters for consistent hot water.",
+    img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80"
+  },
+  { 
+    icon: "Waves", 
+    title: "Hydro Jetting", 
+    desc: "High-pressure water jetting to clear the most stubborn blockages in your sewer lines.",
+    img: "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=800&q=80"
+  },
 ] as const;
 
 export const GALLERY_IMAGES = [
-  { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80", caption: "Copper Pipe Installation", tall: true },
-  { src: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=80", caption: "Burst Pipe Repair", tall: false },
-  { src: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80", caption: "Drain Cleaning", tall: false },
-  { src: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=80", caption: "Water Heater Upgrade", tall: true },
-  { src: "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=600&q=80", caption: "Sewer Line Work", tall: false },
-  { src: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=600&q=80", caption: "Under-Sink Repair", tall: true },
-  { src: "https://images.unsplash.com/photo-1558618047-f4e60cef0d06?w=600&q=80", caption: "Hydro-Jetting Service", tall: false },
-  { src: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80", caption: "Bathroom Repiping", tall: false },
+  { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80", caption: "Copper Pipe Installation" },
+  { src: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80", caption: "Tools & Equipment" },
+  { src: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80", caption: "Construction Workers" },
+  { src: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&q=80", caption: "Hydro-Jetting Pipes" },
+  { src: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=800&q=80", caption: "Plumber at Work" },
+  { src: "https://images.unsplash.com/photo-1584622781564-1d9876a13d00?w=800&q=80", caption: "Modern Bathroom" },
+  { src: "https://images.unsplash.com/photo-1504148455328-497c5efdf13a?w=800&q=80", caption: "Welding Work" },
+  { src: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80", caption: "Luxury House" },
+  { src: "https://images.unsplash.com/photo-1516515429572-111831474243?w=800&q=80", caption: "Commercial Building" },
 ] as const;

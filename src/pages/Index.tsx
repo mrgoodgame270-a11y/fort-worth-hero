@@ -7,7 +7,8 @@ import GallerySection from "@/components/sections/GallerySection";
 import ReviewsSection from "@/components/sections/ReviewsSection";
 import BookingSection from "@/components/sections/BookingSection";
 import Footer from "@/components/sections/Footer";
-import AIChatbot from "@/components/AIChatbot";
+import WhatsAppButton from "@/components/WhatsAppButton";
+import UrgencyPopup from "@/components/UrgencyPopup";
 
 const Index = () => (
   <>
@@ -20,7 +21,8 @@ const Index = () => (
     <ReviewsSection />
     <BookingSection />
     <Footer />
-    <AIChatbot />
+    <WhatsAppButton />
+    <UrgencyPopup />
   </>
 );
 

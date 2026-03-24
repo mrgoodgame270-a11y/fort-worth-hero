@@ -25,8 +25,9 @@ export default {
         popover: { DEFAULT: "hsl(var(--popover))", foreground: "hsl(var(--popover-foreground))" },
         card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
         plumb: {
-          deep: "#0A2540",
-          yellow: "#FFB800",
+          deep: "#0A0F1E",
+          yellow: "#F5C518",
+          cyan: "#00D4FF",
           dark: "#060F1A",
           soft: "#F8FAFC",
         },
@@ -42,7 +43,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['DM Sans', 'system-ui', 'sans-serif'],
+        heading: ['Bebas Neue', 'cursive'],
       },
       borderRadius: {
         lg: "var(--radius)",

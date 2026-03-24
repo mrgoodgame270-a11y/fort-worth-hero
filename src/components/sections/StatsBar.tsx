@@ -22,13 +22,17 @@ const Counter = ({ value, suffix, isDecimal }: { value: number; suffix: string; 
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(eased * value);
-      if (progress < 1) requestAnimationFrame(step);
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        setCount(value);
+      }
     };
     requestAnimationFrame(step);
   }, [inView, value]);
 
   return (
-    <span ref={ref} className="text-4xl md:text-5xl font-black text-plumb-deep">
+    <span ref={ref} className="text-4xl md:text-5xl font-black text-plumb-deep inline-block min-w-[1.5ch]">
       {isDecimal ? count.toFixed(1) : Math.floor(count).toLocaleString()}{suffix}
     </span>
   );

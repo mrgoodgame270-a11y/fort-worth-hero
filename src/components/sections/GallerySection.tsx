@@ -1,6 +1,39 @@
 import { motion } from "framer-motion";
 import { GALLERY_IMAGES } from "@/lib/constants";
 import { fadeUp, staggerContainer } from "@/lib/animations";
+import { useState } from "react";
+
+const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=800&q=80"; // Reliable plumbing fallback
+
+const GalleryImage = ({ img, index }: { img: { src: string; caption: string }; index: number }) => {
+  const [src, setSrc] = useState(img.src);
+
+  return (
+    <motion.div
+      className="rounded-2xl overflow-hidden relative group cursor-pointer aspect-video md:aspect-square lg:aspect-[4/3] bg-gray-100"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.08, duration: 0.5 }}
+    >
+      <img
+        src={src}
+        alt={img.caption}
+        onError={() => setSrc(FALLBACK_IMAGE)}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        loading="lazy"
+      />
+      <div className="absolute inset-0 bg-plumb-deep/80 opacity-0 group-hover:opacity-100 flex items-end p-5 transition-all duration-300">
+        <div>
+          <p className="text-white font-semibold text-sm">{img.caption}</p>
+          <span className="inline-block mt-2 bg-plumb-yellow/20 text-plumb-yellow text-xs font-semibold px-3 py-1 rounded-full">
+            Fort Worth, TX
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 const GallerySection = () => (
   <section id="gallery" className="bg-plumb-soft py-20 md:py-28">
@@ -15,31 +48,9 @@ const GallerySection = () => (
         </motion.p>
       </motion.div>
 
-      <div className="masonry-grid">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {GALLERY_IMAGES.map((img, i) => (
-          <motion.div
-            key={i}
-            className="mb-6 rounded-2xl overflow-hidden relative group cursor-pointer break-inside-avoid"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.08, duration: 0.5 }}
-          >
-            <img
-              src={img.src}
-              alt={img.caption}
-              className={`w-full object-cover ${img.tall ? "h-80" : "h-56"} group-hover:scale-105 transition-transform duration-500`}
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-plumb-deep/80 opacity-0 group-hover:opacity-100 flex items-end p-5 transition-all duration-300">
-              <div>
-                <p className="text-white font-semibold text-sm">{img.caption}</p>
-                <span className="inline-block mt-2 bg-plumb-yellow/20 text-plumb-yellow text-xs font-semibold px-3 py-1 rounded-full">
-                  Fort Worth, TX
-                </span>
-              </div>
-            </div>
-          </motion.div>
+          <GalleryImage key={i} img={img} index={i} />
         ))}
       </div>
     </div>
