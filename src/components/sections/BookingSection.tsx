@@ -67,23 +67,33 @@ const BookingSection = () => {
           </motion.p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-12">
+        <div className="grid lg:grid-cols-12 gap-8 md:gap-12">
           {/* Calendar */}
           <motion.div 
-            className="lg:col-span-2"
+            className="lg:col-span-8 w-full"
             initial="hidden" 
             whileInView="visible" 
             viewport={{ once: true }} 
             variants={staggerContainer}
           >
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 min-h-[700px]">
-              <div style={{ width: "100%", height: "700px", overflow: "scroll" }} id="my-cal-inline-15-min-meeting"></div>
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 min-h-[500px] sm:min-h-[700px] w-full">
+              <div 
+                style={{ width: "100%", height: "700px", overflow: "hidden" }} 
+                id="my-cal-inline-15-min-meeting"
+                className="cal-embed-container"
+              ></div>
             </div>
           </motion.div>
 
           {/* Contact Info + Map */}
-          <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
-            <div className="bg-white rounded-2xl p-6 shadow-lg mb-6 border border-gray-100">
+          <motion.div 
+            className="lg:col-span-4 flex flex-col gap-6"
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            transition={{ duration: 0.7 }}
+          >
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
               <div className="flex items-center gap-3 mb-6">
                 <img src="/logo.png" alt="PlumbHero" className="w-12 h-12" />
                 <div>

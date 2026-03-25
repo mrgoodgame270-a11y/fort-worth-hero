@@ -37,16 +37,16 @@ const UrgencyPopup = () => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ opacity: 0, x: -50, scale: 0.8 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={{ opacity: 0, x: -50, scale: 0.8 }}
-          className="fixed bottom-6 left-6 z-[9999] max-w-[320px] bg-white border border-gray-100 shadow-2xl rounded-2xl p-4 flex items-center gap-4"
+          initial={{ opacity: 0, y: 50, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 50, scale: 0.8 }}
+          className="fixed bottom-24 sm:bottom-6 left-4 sm:left-6 z-[9998] w-[calc(100%-32px)] sm:max-w-[320px] bg-white border border-gray-100 shadow-2xl rounded-2xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4"
         >
-          <div className={`p-2 rounded-full bg-gray-50 ${current.color}`}>
-            <current.icon size={24} />
+          <div className={`p-2 rounded-full bg-gray-50 shrink-0 ${current.color}`}>
+            <current.icon size={20} className="sm:w-6 sm:h-6" />
           </div>
-          <div>
-            <p className="text-sm font-bold text-plumb-deep leading-tight">
+          <div className="min-w-0 flex-1">
+            <p className="text-[13px] sm:text-sm font-bold text-plumb-deep leading-tight truncate-2-lines">
               {current.text}
             </p>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
@@ -55,9 +55,9 @@ const UrgencyPopup = () => {
           </div>
           <button 
             onClick={() => setVisible(false)}
-            className="absolute top-2 right-2 text-gray-300 hover:text-gray-600 transition-colors"
+            className="shrink-0 p-1 text-gray-300 hover:text-gray-600 transition-colors"
           >
-            ×
+            <X size={16} />
           </button>
         </motion.div>
       )}

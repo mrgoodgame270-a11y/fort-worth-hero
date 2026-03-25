@@ -69,22 +69,36 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         <Sheet>
-          <SheetTrigger className="lg:hidden text-white p-2">
-            <Menu size={24} />
+          <SheetTrigger className="lg:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors" aria-label="Open Menu">
+            <Menu size={28} />
           </SheetTrigger>
-          <SheetContent side="right" className="bg-plumb-deep border-plumb-yellow/20 w-full">
-            <div className="flex flex-col gap-6 mt-12">
-              <a href={COMPANY.phoneTel} className="text-plumb-yellow text-xl font-bold flex items-center gap-2">
-                <Phone size={20} /> {COMPANY.phone}
-              </a>
-              {NAV_LINKS.map((link) => (
-                <a key={link.href} href={link.href} className="text-white text-lg font-medium hover:text-plumb-yellow transition-colors">
-                  {link.label}
+          <SheetContent side="right" className="bg-[#0A0F1E] border-plumb-yellow/20 w-[280px] sm:w-[350px] p-0">
+            <div className="flex flex-col h-full pt-20 px-6 pb-8">
+              <div className="flex flex-col gap-1 mb-8">
+                <span className="text-white font-bold text-2xl tracking-wider">PLUMBHERO</span>
+                <span className="text-plumb-yellow text-xs font-bold uppercase tracking-widest">Fort Worth, TX</span>
+              </div>
+              
+              <nav className="flex flex-col gap-4 mb-auto">
+                {NAV_LINKS.map((link) => (
+                  <a 
+                    key={link.href} 
+                    href={link.href} 
+                    className="text-white/80 text-lg font-bold hover:text-plumb-yellow py-3 border-b border-white/5 transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+
+              <div className="flex flex-col gap-4 mt-8">
+                <a href={COMPANY.phoneTel} className="bg-white/5 text-white text-lg font-bold flex items-center justify-center gap-3 py-4 rounded-xl border border-white/10">
+                  <Phone size={20} className="text-plumb-yellow" /> {COMPANY.phone}
                 </a>
-              ))}
-              <a href="#booking" className="bg-plumb-yellow text-plumb-deep font-bold text-center py-4 rounded-xl mt-4">
-                🚨 Book Emergency Now
-              </a>
+                <a href="#booking" className="bg-plumb-yellow text-plumb-deep font-black text-center py-4 rounded-xl text-lg shadow-lg shadow-plumb-yellow/20">
+                  🚨 Book Emergency Now
+                </a>
+              </div>
             </div>
           </SheetContent>
         </Sheet>

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Star, Clock, CircleDollarSign, Zap, Phone, CheckCircle, ArrowRight } from "lucide-react";
+import { ShieldCheck, Star, Clock, CircleDollarSign, Zap, Phone, CheckCircle, ArrowRight, X } from "lucide-react";
 import { COMPANY } from "@/lib/constants";
 import { useEffect, useState } from "react";
 
@@ -52,33 +52,35 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#0A0F1E]">
+    <section className="relative min-h-[100dvh] overflow-hidden bg-[#0A0F1E] flex items-center">
       {/* Background Image / Overlay */}
       <div className="absolute inset-0 z-0 w-full h-full overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center md:bg-right grayscale-[0.5] scale-105"
+          className="absolute inset-0 bg-cover bg-right md:bg-[85%_center] grayscale-[0.3] scale-105 transition-transform duration-1000"
           style={{ backgroundImage: "url('/hero-van.jpg')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0F1E] via-[#0A0F1E]/95 to-transparent hidden md:block w-full h-full" />
-        <div className="absolute inset-0 bg-[#0A0F1E]/80 md:hidden w-full h-full" />
+        {/* Modern Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0F1E] via-[#0A0F1E]/95 to-transparent hidden lg:block w-full h-full" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F1E]/80 via-[#0A0F1E]/60 to-[#0A0F1E] lg:hidden w-full h-full" />
+        <div className="absolute inset-0 bg-[#0A0F1E]/40 lg:hidden w-full h-full" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 pt-32 pb-20 md:pt-40 md:pb-32 min-h-screen flex flex-col justify-center">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-28 pb-16 md:pt-36 md:pb-24">
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
           {/* Left Content */}
-          <div className="flex flex-col gap-8">
+          <div className="lg:col-span-7 flex flex-col gap-6 md:gap-8">
             {/* Available Now Badge */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2.5 self-start bg-white/5 backdrop-blur-sm border border-plumb-yellow/30 px-4 py-2 rounded-full"
+              className="inline-flex items-center gap-2.5 self-start bg-white/10 backdrop-blur-md border border-plumb-yellow/30 px-4 py-2 rounded-full"
             >
               <div className="relative">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-red-500 animate-ping-ring-dot" />
+                <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-red-500 animate-ping opacity-75" />
               </div>
-              <span className="text-white font-bold text-xs md:text-sm tracking-wider uppercase">
+              <span className="text-white font-bold text-[10px] sm:text-xs md:text-sm tracking-wider uppercase">
                 <span className="text-plumb-yellow">🚨 Fort Worth's #1 Emergency Plumber</span> — Available Now
               </span>
             </motion.div>
@@ -88,7 +90,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="font-heading text-6xl md:text-8xl lg:text-[100px] leading-[0.9] tracking-tight text-white"
+              className="font-heading text-5xl sm:text-6xl md:text-8xl lg:text-[110px] leading-[0.85] tracking-tight text-white"
             >
               24/7 <span className="text-plumb-yellow">Emergency</span><br />
               Plumbing in<br />
@@ -100,12 +102,12 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex items-center gap-4 group"
+              className="flex items-center gap-3 sm:gap-4 group"
             >
-              <div className="bg-plumb-yellow p-2 rounded-lg group-hover:scale-110 transition-transform">
-                <Zap className="text-[#0A0F1E] fill-[#0A0F1E]" size={28} />
+              <div className="bg-plumb-yellow p-1.5 sm:p-2 rounded-lg group-hover:scale-110 transition-transform shrink-0">
+                <Zap className="text-[#0A0F1E] fill-[#0A0F1E]" size={24} />
               </div>
-              <p className="text-plumb-yellow font-bold text-2xl md:text-3xl lg:text-4xl tracking-tight">
+              <p className="text-plumb-yellow font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-tight">
                 30 Minute Response Guaranteed!
               </p>
             </motion.div>
@@ -114,7 +116,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-gray-400 text-lg md:text-xl max-w-xl leading-relaxed font-medium"
+              className="text-gray-300 text-base sm:text-lg md:text-xl max-w-xl leading-relaxed font-medium"
             >
               Burst pipes? No hot water? Clogged drains? Certified plumbers arrive in 30 minutes or less — upfront pricing, zero surprises, no overtime charges.
             </motion.p>
@@ -124,12 +126,12 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex flex-wrap gap-3"
+              className="flex flex-wrap gap-2 sm:gap-3"
             >
               {badges.map((badge, idx) => (
-                <div key={idx} className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-md backdrop-blur-sm">
-                  <badge.icon className="text-plumb-yellow" size={16} />
-                  <span className="text-white/90 text-sm font-bold">{badge.label}</span>
+                <div key={idx} className="flex items-center gap-1.5 sm:gap-2 bg-white/5 border border-white/10 px-2.5 py-1.5 rounded-md backdrop-blur-sm">
+                  <badge.icon className="text-plumb-yellow shrink-0" size={14} />
+                  <span className="text-white/90 text-[11px] sm:text-sm font-bold whitespace-nowrap">{badge.label}</span>
                 </div>
               ))}
             </motion.div>
@@ -139,19 +141,19 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className="flex flex-col sm:flex-row items-center gap-4 mt-4"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4 mt-2 sm:mt-4"
             >
               <a 
                 href="#booking" 
-                className="w-full sm:w-auto bg-plumb-yellow hover:bg-plumb-yellow/90 text-[#0A0F1E] font-black text-lg md:text-xl px-8 py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(245,197,24,0.4)]"
+                className="bg-plumb-yellow hover:bg-plumb-yellow/90 text-[#0A0F1E] font-black text-base sm:text-lg md:text-xl px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(245,197,24,0.4)]"
               >
                 🚨 Book Emergency Now
               </a>
               <a 
                 href="#booking" 
-                className="w-full sm:w-auto border-2 border-white/20 hover:border-white/40 text-white font-bold text-lg md:text-xl px-8 py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:bg-white/5"
+                className="border-2 border-white/20 hover:border-white/40 text-white font-bold text-base sm:text-lg md:text-xl px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:bg-white/5"
               >
-                Get Instant Quote <ArrowRight size={20} className="text-plumb-cyan" />
+                Get Instant Quote <ArrowRight size={18} className="text-plumb-cyan" />
               </a>
             </motion.div>
 
@@ -160,17 +162,17 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.6 }}
-              className="flex items-center gap-4"
+              className="flex items-center gap-4 mt-2"
             >
-              <div className="relative">
-                <div className="bg-plumb-yellow p-3 rounded-full animate-ring-shake">
+              <div className="relative shrink-0">
+                <div className="bg-plumb-yellow p-2.5 sm:p-3 rounded-full animate-ring-shake">
                   <Phone className="text-[#0A0F1E] fill-[#0A0F1E]" size={24} />
                 </div>
-                <div className="absolute inset-0 bg-plumb-yellow rounded-full animate-ping-ring opacity-50" />
+                <div className="absolute inset-0 bg-plumb-yellow rounded-full animate-ping opacity-50" />
               </div>
               <div className="flex flex-col">
-                <span className="text-gray-500 text-xs font-bold uppercase tracking-widest">Call Now — We Answer 24/7</span>
-                <a href={COMPANY.phoneTel} className="text-white text-3xl md:text-4xl font-heading tracking-wider hover:text-plumb-yellow transition-colors">
+                <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Call Now — 24/7 Service</span>
+                <a href={COMPANY.phoneTel} className="text-white text-2xl sm:text-3xl md:text-4xl font-heading tracking-wider hover:text-plumb-yellow transition-colors leading-none">
                   {COMPANY.phone}
                 </a>
               </div>
@@ -212,23 +214,23 @@ const HeroSection = () => {
       <AnimatePresence>
         {showPopup && (
           <motion.div 
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 100, opacity: 0 }}
-            className="fixed bottom-24 right-6 z-50 bg-[#F5C518] text-[#0A0F1E] p-4 rounded-xl shadow-2xl flex items-center gap-4 max-w-[280px]"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 50, opacity: 0 }}
+            className="fixed bottom-24 sm:bottom-6 right-4 sm:right-24 z-[9998] bg-plumb-yellow text-plumb-deep p-3 sm:p-4 rounded-xl shadow-2xl flex items-center gap-3 sm:gap-4 w-[calc(100%-32px)] sm:max-w-[280px]"
           >
-            <div className="bg-[#0A0F1E] p-2 rounded-full">
-              <CheckCircle size={20} className="text-[#F5C518]" />
+            <div className="bg-plumb-deep p-2 rounded-full shrink-0">
+              <CheckCircle size={20} className="text-plumb-yellow" />
             </div>
-            <div className="flex flex-col">
-              <span className="font-black text-sm uppercase leading-none">Just Arrived</span>
-              <span className="text-xs font-bold opacity-80 mt-1">Plumber on route — Fort Worth, TX</span>
+            <div className="flex flex-col min-w-0">
+              <span className="font-black text-xs sm:text-sm uppercase leading-none">Just Arrived</span>
+              <span className="text-[10px] sm:text-xs font-bold opacity-80 mt-1 truncate">Plumber on route — Fort Worth, TX</span>
             </div>
             <button 
               onClick={() => setShowPopup(false)}
-              className="absolute -top-2 -right-2 bg-[#0A0F1E] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+              className="ml-auto p-1 text-plumb-deep/60 hover:text-plumb-deep transition-colors"
             >
-              ×
+              <X size={16} />
             </button>
           </motion.div>
         )}

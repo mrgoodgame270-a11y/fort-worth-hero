@@ -13,31 +13,32 @@ const ServiceCard = ({ service, index }: { service: any; index: number }) => {
   return (
     <motion.div
       variants={fadeUp}
-      className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+      className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 h-full flex flex-col"
     >
-      <div className="relative h-64 overflow-hidden">
+      <div className="relative h-48 sm:h-64 overflow-hidden shrink-0">
         <img
           src={imgSrc}
           alt={`${service.title} - Plumber in Fort Worth`}
           onError={() => setImgSrc(FALLBACK_IMAGE)}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-plumb-deep/80 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-        <div className="absolute bottom-4 left-6 bg-plumb-yellow p-3 rounded-2xl shadow-lg">
-          <Icon className="text-plumb-deep" size={24} />
+        <div className="absolute bottom-4 left-6 bg-plumb-yellow p-2.5 sm:p-3 rounded-2xl shadow-lg">
+          <Icon className="text-plumb-deep w-5 h-5 sm:w-6 sm:h-6" />
         </div>
       </div>
       
-      <div className="p-8">
-        <h3 className="text-2xl font-black text-plumb-deep mb-3 tracking-tight">
+      <div className="p-6 sm:p-8 flex-1 flex flex-col">
+        <h3 className="text-xl sm:text-2xl font-black text-plumb-deep mb-3 tracking-tight">
           {service.title}
         </h3>
-        <p className="text-plumb-deep/60 leading-relaxed mb-6 font-medium">
+        <p className="text-plumb-deep/60 leading-relaxed mb-6 font-medium text-sm sm:text-base flex-1">
           {service.desc}
         </p>
         <a 
           href="#booking" 
-          className="inline-flex items-center gap-2 text-plumb-deep font-bold hover:text-plumb-yellow transition-colors group/link"
+          className="inline-flex items-center gap-2 text-plumb-deep font-bold hover:text-plumb-yellow transition-colors group/link mt-auto"
         >
           Book Service 
           <Icons.ArrowRight size={18} className="transition-transform group-hover/link:translate-x-1" />

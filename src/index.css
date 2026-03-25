@@ -50,11 +50,26 @@
     @apply border-border;
   }
   body {
-    @apply bg-[#0A0F1E] text-foreground antialiased overflow-x-hidden;
+    @apply bg-[#0A0F1E] text-foreground antialiased overflow-x-hidden w-full m-0 p-0;
     font-family: 'DM Sans', system-ui, sans-serif;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  #root {
+    @apply w-full overflow-x-hidden relative;
+  }
+
+  /* Universal box sizing fix */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  /* Prevent images and videos from overflowing their containers */
+  img, video, iframe {
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Bebas Neue', cursive;
