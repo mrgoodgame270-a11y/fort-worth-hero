@@ -6,52 +6,63 @@ import { fadeUp, staggerContainer } from "@/lib/animations";
 
 const BookingSection = () => {
   useEffect(() => {
-    (function (C, A, L) {
-      let p = function (a, ar) { a.q.push(ar); };
-      let d = C.document;
-      C.Cal = C.Cal || function () {
-        let cal = C.Cal;
-        let ar = arguments;
-        if (!cal.loaded) {
-          cal.ns = {};
-          cal.q = cal.q || [];
-          d.head.appendChild(d.createElement("script")).src = A;
-          cal.loaded = true;
+    let isMounted = true;
+
+    const initCal = async () => {
+      if (typeof window === "undefined") return;
+
+      // Official Cal.com embed snippet
+      (function (C, A, L) {
+        let p = function (a, ar) { a.q.push(ar); };
+        let d = C.document;
+        C.Cal = C.Cal || function () {
+          let cal = C.Cal;
+          let ar = arguments;
+          if (!cal.loaded) {
+            cal.ns = {};
+            cal.q = cal.q || [];
+            d.head.appendChild(d.createElement("script")).src = A;
+            cal.loaded = true;
+          }
+          if (ar[0] === L) {
+            const api = function () { p(api, arguments); };
+            const namespace = ar[1];
+            api.q = api.q || [];
+            if (typeof namespace === "string") {
+              cal.ns[namespace] = cal.ns[namespace] || api;
+              p(cal.ns[namespace], ar);
+              p(cal, ["initNamespace", namespace]);
+            } else p(cal, ar);
+            return;
+          }
+          p(cal, ar);
+        };
+      })(window, "https://app.cal.com/embed/embed.js", "init");
+
+      if (window.Cal && isMounted) {
+        try {
+          window.Cal("init", "15-min-meeting", { origin: "https://app.cal.com" });
+
+          window.Cal.ns["15-min-meeting"]("inline", {
+            elementOrSelector: "#my-cal-inline-15-min-meeting",
+            config: { "layout": "month_view", "useSlotsViewOnSmallScreen": "true" },
+            calLink: "alitheplumber/15-min-meeting",
+          });
+
+          window.Cal.ns["15-min-meeting"]("ui", { "hideEventTypeDetails": false, "layout": "month_view" });
+        } catch (e) {
+          console.warn("Cal.com initialization failed", e);
         }
-        if (ar[0] === L) {
-          const api = function () { p(api, arguments); };
-          const namespace = ar[1];
-          api.q = api.q || [];
-          if (typeof namespace === "string") {
-            cal.ns[namespace] = cal.ns[namespace] || api;
-            p(cal.ns[namespace], ar);
-            p(cal, ["initNamespace", namespace]);
-          } else p(cal, ar);
-          return;
-        }
-        p(cal, ar);
-      };
-    })(window, "https://app.cal.com/embed/embed.js", "init");
-
-    // @ts-ignore
-    if (window.Cal) {
-      try {
-        // @ts-ignore
-        window.Cal("init", "15-min-meeting", { origin: "https://app.cal.com" });
-
-        // @ts-ignore
-        window.Cal.ns["15-min-meeting"]("inline", {
-          elementOrSelector: "#my-cal-inline-15-min-meeting",
-          config: { "layout": "month_view", "useSlotsViewOnSmallScreen": "true" },
-          calLink: "alitheplumber/15-min-meeting",
-        });
-
-        // @ts-ignore
-        window.Cal.ns["15-min-meeting"]("ui", { "hideEventTypeDetails": false, "layout": "month_view" });
-      } catch (e) {
-        console.warn("Cal.com initialization failed", e);
       }
-    }
+    };
+
+    initCal();
+
+    return () => {
+      isMounted = false;
+      // Note: Cal.com embed doesn't provide a clean "destroy" for inline yet, 
+      // but preventing multiple inits via isMounted/script check helps stability.
+    };
   }, []);
 
   return (

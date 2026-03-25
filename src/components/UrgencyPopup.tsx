@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Bell, User, PhoneCall, Zap } from "lucide-react";
+import { Bell, User, PhoneCall, Zap, X } from "lucide-react";
 
 const notifications = [
   { id: 1, text: "Someone in Fort Worth just booked an emergency repair!", icon: Zap, color: "text-red-500" },
