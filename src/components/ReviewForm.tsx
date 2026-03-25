@@ -1,19 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
-import { CheckCircle, ExternalLink } from "lucide-react";
+import { CheckCircle } from "lucide-react";
+
+const GOOGLE_REVIEW_URL = "https://www.google.com/search?q=10325+Harmon+Rd+Ste+605%2C+Fort+Worth%2C+TX+76177%0D%0A%28817%29+470-8920&sca_esv=5746b10727b3273c&udm=1&biw=1280&bih=593&sxsrf=ANbL-n78fpu5hsUhPDAbKTRZ1lmAcTV_LA%3A1774420770139&ei=IoPDaYCWCNm69u8P9pbGqQc&ved=0ahUKEwiAr769uLqTAxVZnf0HHXaLMXU4KBDh1QMIEQ&uact=5&oq=10325+Harmon+Rd+Ste+605%2C+Fort+Worth%2C+TX+76177%0D%0A%28817%29+470-8920&gs_lp=EhZnd3Mtd2l6LW1vZGVsZXNzLWxvY2FsIjwxMDMyNSBIYXJtb24gUmQgU3RlIDYwNSwgRm9ydCBXb3J0aCwgVFggNzYxNzcKKDgxNykgNDcwLTg5MjBIAFAAWABwAHgAkAEAmAEAoAEAqgEAuAEDyAEA-AEC-AEBmAIAoAIAmAMAkgcAoAcAsgcAuAcAwgcAyAcAgAgA&sclient=gws-wiz-modeless-local&lqi=Cj0xMDMyNSBIYXJtb24gUmQgU3RlIDYwNSwgRm9ydCBXb3J0aCwgVFggNzYxNzcNCig4MTcpIDQ3MC04OTIwSKPJzJqSr4CACFpSEAkQChALGAAYARgCGAMYBBgFGAYYBxgIIjgxMDMyNSBoYXJtb24gcmQgc3RlIDYwNSBmb3J0IHdvcnRoIHR4IDc2MTc3IDgxNyA0NzAgODkyMHoKRm9ydCBXb3J0aJIBB3BsdW1iZXKaASNDaFpEU1VoTk1HOW5TMFZKUTBGblNVTm9iV0UyVWtaM0VBRfoBBQiBBBAx#lkt=LocalPoiReviews&rlimm=15644598845882971531&lrd=0x864dd920533e47ad:0xd91cc7c2fe57358b,3,,,,";
+const WEBHOOK_URL = "https://oingcom.app.n8n.cloud/webhook/google-review";
 
 const ReviewForm = () => {
   const [formData, setFormData] = useState({
     rating: "",
     name: "",
     email: "",
+    description: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const ratingNum = formData.rating ? parseInt(formData.rating) : 0;
+  const isPositive = ratingNum >= 4;
+
+  useEffect(() => {
+    if (formData.rating && isPositive) {
+      // Send only rating to webhook for positive feedback before redirecting
+      const sendRatingOnly = async () => {
+        try {
+          const data = new FormData();
+          data.append("rating", formData.rating);
+          await fetch(WEBHOOK_URL, { method: "POST", body: data });
+        } catch (e) {
+          console.warn("Webhook silent failed", e);
+        }
+        window.location.href = GOOGLE_REVIEW_URL;
+      };
+      sendRatingOnly();
+    }
+  }, [formData.rating]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isPositive) return; // Handled by useEffect redirect
+
     setIsSubmitting(true);
 
     try {
@@ -21,22 +47,15 @@ const ReviewForm = () => {
       data.append("rating", formData.rating);
       data.append("name", formData.name);
       data.append("email", formData.email);
+      data.append("description", formData.description);
 
-      // Send data to n8n
-      await fetch("https://oingcom.app.n8n.cloud/webhook-test/google-review", {
+      // Send data to production webhook
+      await fetch(WEBHOOK_URL, {
         method: "POST",
         body: data,
       });
 
-      const ratingNum = parseInt(formData.rating);
-
-      // Show success state on website
       setIsSubmitted(true);
-
-      // Open Google Review in new tab if rating is 4 or 5
-      if (ratingNum >= 4) {
-        window.open("https://www.google.com/search?q=usa+texas+plumber&sca_esv=7510c8a0c527f380&sxsrf=ANbL-n5DBQ96UF8jNfFNO5LSe6hqCUwEVw:1774286600113&udm=1&lsack=CHfBaZbQBsvp7M8P2tiM4AQ&sa=X&ved=2ahUKEwiW9J3UxLaTAxXLNPsDHVosA0wQjGp6BAgoEAA&biw=1280&bih=593&dpr=1.5&lqi=ChF1c2EgdGV4YXMgcGx1bWJlckii4N3I1q6AgAhaGRACGAEYAiIRdXNhIHRleGFzIHBsdW1iZXKSAQdwbHVtYmVymgFEQ2k5RFFVbFJRVU52WkVOb2RIbGpSamx2VDJwUk5WVlliR3hVVjI4eFZWZGtNbE5FVFRKTlNHaDNUbGRXYlZWc1JSQUL6AQUIyAEQSQ#lkt=LocalPoiReviews&rlimm=14664880650562055822&lrd=0x8651b13e24b898fd:0xcb841f40fa402e8,3,,,,", "_blank");
-      }
     } catch (error) {
       console.error("Error submitting review:", error);
       alert("Something went wrong. Please try again.");
@@ -88,41 +107,62 @@ const ReviewForm = () => {
                 </select>
               </div>
 
-              <div>
-                <label htmlFor="name" className="block text-white/60 text-xs font-bold uppercase tracking-widest mb-2">Name:</label>
-                <input 
-                  type="text" 
-                  name="name" 
-                  id="name" 
-                  placeholder="Your name" 
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={inputClass}
-                />
-              </div>
+              {formData.rating && !isPositive && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <label htmlFor="name" className="block text-white/60 text-xs font-bold uppercase tracking-widest mb-2">Name:</label>
+                    <input 
+                      type="text" 
+                      name="name" 
+                      id="name" 
+                      placeholder="Your name" 
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className={inputClass}
+                    />
+                  </div>
 
-              <div>
-                <label htmlFor="email" className="block text-white/60 text-xs font-bold uppercase tracking-widest mb-2">Email:</label>
-                <input 
-                  type="email" 
-                  name="email" 
-                  id="email" 
-                  placeholder="Your email" 
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className={inputClass}
-                />
-              </div>
+                  <div>
+                    <label htmlFor="email" className="block text-white/60 text-xs font-bold uppercase tracking-widest mb-2">Email:</label>
+                    <input 
+                      type="email" 
+                      name="email" 
+                      id="email" 
+                      placeholder="Your email" 
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className={inputClass}
+                    />
+                  </div>
 
-              <button 
-                type="submit" 
-                disabled={isSubmitting}
-                className="w-full py-4 bg-green-500 hover:bg-green-600 disabled:bg-green-800 text-white font-black rounded-xl shadow-lg transition-all hover:scale-[1.02] active:scale-95"
-              >
-                {isSubmitting ? "Submitting..." : "SUBMIT FEEDBACK"}
-              </button>
+                  <div>
+                    <label htmlFor="description" className="block text-white/60 text-xs font-bold uppercase tracking-widest mb-2">Please tell us what went wrong:</label>
+                    <textarea 
+                      name="description" 
+                      id="description" 
+                      placeholder="Describe your experience..." 
+                      required
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      className={`${inputClass} min-h-[100px] resize-none`}
+                    />
+                  </div>
+
+                  <button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="w-full py-4 bg-green-500 hover:bg-green-600 disabled:bg-green-800 text-white font-black rounded-xl shadow-lg transition-all hover:scale-[1.02] active:scale-95"
+                  >
+                    {isSubmitting ? "Submitting..." : "SUBMIT FEEDBACK"}
+                  </button>
+                </motion.div>
+              )}
             </form>
           </motion.div>
         ) : (
@@ -139,15 +179,13 @@ const ReviewForm = () => {
               Thank You!
             </h3>
             <p className="text-white/60 mb-8 font-medium">
-              Your feedback helps us provide better service to the Fort Worth community.
+              We've received your feedback and will contact you soon to resolve any issues.
             </p>
-            {parseInt(formData.rating) >= 4 && (
-              <p className="text-plumb-yellow text-sm font-bold flex items-center justify-center gap-2">
-                Opening Google Reviews in a new tab... <ExternalLink size={16} />
-              </p>
-            )}
             <button 
-              onClick={() => setIsSubmitted(false)}
+              onClick={() => {
+                setIsSubmitted(false);
+                setFormData({ rating: "", name: "", email: "", description: "" });
+              }}
               className="mt-8 text-white/40 hover:text-white text-xs font-bold uppercase tracking-widest underline underline-offset-4"
             >
               Submit another review
