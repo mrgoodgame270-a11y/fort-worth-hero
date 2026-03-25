@@ -52,24 +52,21 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-[100dvh] overflow-hidden bg-[#0A0F1E] flex items-center">
-      {/* Background Image / Overlay */}
-      <div className="absolute inset-0 z-0 w-full h-full overflow-hidden">
+    <section className="relative min-h-[100dvh] overflow-hidden bg-[#0A0F1E] flex flex-col lg:flex-row items-center">
+      {/* Background Image / Overlay - Desktop Only */}
+      <div className="absolute inset-0 z-0 w-full h-full overflow-hidden hidden lg:block">
         <div 
-          className="absolute inset-0 bg-cover bg-right md:bg-[85%_center] grayscale-[0.3] scale-105 transition-transform duration-1000"
+          className="absolute inset-0 bg-cover bg-[85%_center] grayscale-[0.2] scale-105 transition-transform duration-1000"
           style={{ backgroundImage: "url('/hero-van.jpg')" }}
         />
-        {/* Modern Gradient Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0F1E] via-[#0A0F1E]/95 to-transparent hidden lg:block w-full h-full" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F1E]/80 via-[#0A0F1E]/60 to-[#0A0F1E] lg:hidden w-full h-full" />
-        <div className="absolute inset-0 bg-[#0A0F1E]/40 lg:hidden w-full h-full" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0F1E] via-[#0A0F1E]/95 to-transparent w-full h-full" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-28 pb-16 md:pt-36 md:pb-24">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-28 pb-12 lg:py-24">
         <div className="grid lg:grid-cols-12 gap-12 items-center">
-          {/* Left Content */}
+          {/* Content Column */}
           <div className="lg:col-span-7 flex flex-col gap-6 md:gap-8">
-            {/* Available Now Badge */}
+            {/* Branded Trust Badge */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -90,12 +87,37 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="font-heading text-5xl sm:text-6xl md:text-8xl lg:text-[110px] leading-[0.85] tracking-tight text-white"
+              className="font-heading text-5xl sm:text-7xl md:text-8xl lg:text-[110px] leading-[0.85] tracking-tight text-white"
             >
-              24/7 <span className="text-plumb-yellow">Emergency</span><br />
+              24/7 <span className="text-plumb-yellow text-glow">Emergency</span><br />
               Plumbing in<br />
               <span className="text-plumb-yellow underline decoration-plumb-cyan decoration-4 underline-offset-8">Fort Worth, TX</span>
             </motion.h1>
+
+            {/* Mobile Hero Visual Block */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="lg:hidden relative rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl aspect-[16/10] sm:aspect-video"
+            >
+              <img 
+                src="/hero-van.jpg" 
+                alt="PlumbHero Service Van" 
+                className="w-full h-full object-cover object-[75%_center]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F1E] via-transparent to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                <div className="flex items-center gap-2 bg-[#0A0F1E]/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/10">
+                  <ShieldCheck className="text-plumb-yellow" size={16} />
+                  <span className="text-white text-[10px] font-bold uppercase tracking-widest">Licensed & Insured</span>
+                </div>
+                <div className="flex items-center gap-2 bg-plumb-yellow px-3 py-1.5 rounded-lg shadow-lg">
+                  <Clock className="text-plumb-deep" size={16} />
+                  <span className="text-plumb-deep text-[10px] font-black uppercase tracking-widest">30 Min Arrival</span>
+                </div>
+              </div>
+            </motion.div>
 
             {/* Subheadline with Lightning Bolt */}
             <motion.div 
@@ -121,12 +143,12 @@ const HeroSection = () => {
               Burst pipes? No hot water? Clogged drains? Certified plumbers arrive in 30 minutes or less — upfront pricing, zero surprises, no overtime charges.
             </motion.p>
 
-            {/* Trust Badges */}
+            {/* Desktop Only Trust Badges */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex flex-wrap gap-2 sm:gap-3"
+              className="hidden lg:flex flex-wrap gap-2 sm:gap-3"
             >
               {badges.map((badge, idx) => (
                 <div key={idx} className="flex items-center gap-1.5 sm:gap-2 bg-white/5 border border-white/10 px-2.5 py-1.5 rounded-md backdrop-blur-sm">
@@ -145,7 +167,7 @@ const HeroSection = () => {
             >
               <a 
                 href="#booking" 
-                className="bg-plumb-yellow hover:bg-plumb-yellow/90 text-[#0A0F1E] font-black text-base sm:text-lg md:text-xl px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(245,197,24,0.4)]"
+                className="bg-plumb-yellow hover:bg-plumb-yellow/90 text-[#0A0F1E] font-black text-base sm:text-lg md:text-xl px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(245,197,24,0.4)] shadow-xl"
               >
                 🚨 Book Emergency Now
               </a>
@@ -157,7 +179,7 @@ const HeroSection = () => {
               </a>
             </motion.div>
 
-            {/* Phone with Animated Ring */}
+            {/* Phone with Branded Treatment */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -166,12 +188,12 @@ const HeroSection = () => {
             >
               <div className="relative shrink-0">
                 <div className="bg-plumb-yellow p-2.5 sm:p-3 rounded-full animate-ring-shake">
-                  <Phone className="text-[#0A0F1E] fill-[#0A0F1E]" size={24} />
+                  <Phone className="text-[#0A0F1E] fill-[#0A0F1E]" size={20} sm:size={24} />
                 </div>
                 <div className="absolute inset-0 bg-plumb-yellow rounded-full animate-ping opacity-50" />
               </div>
               <div className="flex flex-col">
-                <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Call Now — 24/7 Service</span>
+                <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Call Now — 24/7 Local Experts</span>
                 <a href={COMPANY.phoneTel} className="text-white text-2xl sm:text-3xl md:text-4xl font-heading tracking-wider hover:text-plumb-yellow transition-colors leading-none">
                   {COMPANY.phone}
                 </a>
@@ -210,21 +232,21 @@ const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* "Just Arrived" Popup Notification */}
+      {/* "Just Arrived" Popup Notification - Desktop Only & Subtle */}
       <AnimatePresence>
         {showPopup && (
           <motion.div 
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
-            className="fixed bottom-24 sm:bottom-6 right-4 sm:right-24 z-[9998] bg-plumb-yellow text-plumb-deep p-3 sm:p-4 rounded-xl shadow-2xl flex items-center gap-3 sm:gap-4 w-[calc(100%-32px)] sm:max-w-[280px]"
+            className="fixed bottom-6 right-24 z-[9998] bg-plumb-yellow text-plumb-deep p-4 rounded-xl shadow-2xl hidden lg:flex items-center gap-4 max-w-[280px] border border-[#0A0F1E]/10"
           >
             <div className="bg-plumb-deep p-2 rounded-full shrink-0">
               <CheckCircle size={20} className="text-plumb-yellow" />
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="font-black text-xs sm:text-sm uppercase leading-none">Just Arrived</span>
-              <span className="text-[10px] sm:text-xs font-bold opacity-80 mt-1 truncate">Plumber on route — Fort Worth, TX</span>
+              <span className="font-black text-sm uppercase leading-none">Just Arrived</span>
+              <span className="text-xs font-bold opacity-80 mt-1 truncate">Plumber on route — Fort Worth, TX</span>
             </div>
             <button 
               onClick={() => setShowPopup(false)}

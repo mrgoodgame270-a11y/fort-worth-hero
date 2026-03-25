@@ -40,7 +40,7 @@ const UrgencyPopup = () => {
           initial={{ opacity: 0, y: 50, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.8 }}
-          className="fixed bottom-24 sm:bottom-6 left-4 sm:left-6 z-[9998] w-[calc(100%-32px)] sm:max-w-[320px] bg-white border border-gray-100 shadow-2xl rounded-2xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4"
+          className="fixed bottom-6 left-6 z-[9998] max-w-[320px] bg-white border border-gray-100 shadow-2xl rounded-2xl p-4 hidden lg:flex items-center gap-4"
         >
           <div className={`p-2 rounded-full bg-gray-50 shrink-0 ${current.color}`}>
             <current.icon size={20} className="sm:w-6 sm:h-6" />
