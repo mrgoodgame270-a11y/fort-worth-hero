@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
 import { CheckCircle } from "lucide-react";
 
-const GOOGLE_REVIEW_URL = "https://www.google.com/search?q=10325+Harmon+Rd+Ste+605%2C+Fort+Worth%2C+TX+76177%0D%0A%28817%29+470-8920&sca_esv=5746b10727b3273c&udm=1&biw=1280&bih=593&sxsrf=ANbL-n78fpu5hsUhPDAbKTRZ1lmAcTV_LA%3A1774420770139&ei=IoPDaYCWCNm69u8P9pbGqQc&ved=0ahUKEwiAr769uLqTAxVZnf0HHXaLMXU4KBDh1QMIEQ&uact=5&oq=10325+Harmon+Rd+Ste+605%2C+Fort+Worth%2C+TX+76177%0D%0A%28817%29+470-8920&gs_lp=EhZnd3Mtd2l6LW1vZGVsZXNzLWxvY2FsIjwxMDMyNSBIYXJtb24gUmQgU3RlIDYwNSwgRm9ydCBXb3J0aCwgVFggNzYxNzcKKDgxNykgNDcwLTg5MjBIAFAAWABwAHgAkAEAmAEAoAEAqgEAuAEDyAEA-AEC-AEBmAIAoAIAmAMAkgcAoAcAsgcAuAcAwgcAyAcAgAgA&sclient=gws-wiz-modeless-local&lqi=Cj0xMDMyNSBIYXJtb24gUmQgU3RlIDYwNSwgRm9ydCBXb3J0aCwgVFggNzYxNzcNCig4MTcpIDQ3MC04OTIwSKPJzJqSr4CACFpSEAkQChALGAAYARgCGAMYBBgFGAYYBxgIIjgxMDMyNSBoYXJtb24gcmQgc3RlIDYwNSBmb3J0IHdvcnRoIHR4IDc2MTc3IDgxNyA0NzAgODkyMHoKRm9ydCBXb3J0aJIBB3BsdW1iZXKaASNDaFpEU1VoTk1HOW5TMFZKUTBGblNVTm9iV0UyVWtaM0VBRfoBBQiBBBAx#lkt=LocalPoiReviews&rlimm=15644598845882971531&lrd=0x864dd920533e47ad:0xd91cc7c2fe57358b,3,,,,";
+const GOOGLE_REVIEW_URL = "https://www.google.com/maps/place/United+Plumbing+Solutions/@32.92438,-97.331455,15z/data=!4m8!3m7!1s0x864dd920533e47ad:0xd91cc7c2fe57358b!8m2!3d32.9243805!4d-97.3314548!9m1!1b1!16s%2Fg%2F11h4kp6953?hl=en&entry=ttu&g_ep=EgoyMDI2MDMyMy4xIKXMDSoASAFQAw%3D%3D";
 const WEBHOOK_URL = "https://oingcom.app.n8n.cloud/webhook/google-review";
 
 const ReviewForm = () => {
@@ -19,26 +19,13 @@ const ReviewForm = () => {
   const ratingNum = formData.rating ? parseInt(formData.rating) : 0;
   const isPositive = ratingNum >= 4;
 
-  useEffect(() => {
-    if (formData.rating && isPositive) {
-      // Send only rating to webhook for positive feedback before redirecting
-      const sendRatingOnly = async () => {
-        try {
-          const data = new FormData();
-          data.append("rating", formData.rating);
-          await fetch(WEBHOOK_URL, { method: "POST", body: data });
-        } catch (e) {
-          console.warn("Webhook silent failed", e);
-        }
-        window.location.href = GOOGLE_REVIEW_URL;
-      };
-      sendRatingOnly();
-    }
-  }, [formData.rating]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isPositive) return; // Handled by useEffect redirect
+
+    if (isPositive) {
+      window.location.href = GOOGLE_REVIEW_URL;
+      return;
+    }
 
     setIsSubmitting(true);
 
@@ -107,7 +94,7 @@ const ReviewForm = () => {
                 </select>
               </div>
 
-              {formData.rating && !isPositive && (
+              {formData.rating && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
@@ -142,7 +129,7 @@ const ReviewForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="description" className="block text-white/60 text-xs font-bold uppercase tracking-widest mb-2">Please tell us what went wrong:</label>
+                    <label htmlFor="description" className="block text-white/60 text-xs font-bold uppercase tracking-widest mb-2">Description / feedback:</label>
                     <textarea 
                       name="description" 
                       id="description" 
@@ -159,7 +146,7 @@ const ReviewForm = () => {
                     disabled={isSubmitting}
                     className="w-full py-4 bg-green-500 hover:bg-green-600 disabled:bg-green-800 text-white font-black rounded-xl shadow-lg transition-all hover:scale-[1.02] active:scale-95"
                   >
-                    {isSubmitting ? "Submitting..." : "SUBMIT FEEDBACK"}
+                    {isSubmitting ? "Submitting..." : isPositive ? "CONTINUE TO GOOGLE REVIEW" : "SUBMIT FEEDBACK"}
                   </button>
                 </motion.div>
               )}

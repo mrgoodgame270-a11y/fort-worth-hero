@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, Star, Clock, CircleDollarSign, Zap, Phone, CheckCircle, ArrowRight, X } from "lucide-react";
 import { COMPANY } from "@/lib/constants";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const badges = [
   { icon: ShieldCheck, label: "Licensed & Insured" },
@@ -13,31 +13,49 @@ const badges = [
 const Counter = ({ value }: { value: number }) => {
   const [count, setCount] = useState(0);
   const [ref, setRef] = useState<HTMLSpanElement | null>(null);
+  const hasAnimated = useRef(false);
+  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!ref) return;
+    if (!ref || hasAnimated.current) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          let start = 0;
-          const end = value;
-          const duration = 2000;
-          const increment = end / (duration / 16);
-          const timer = setInterval(() => {
-            start += increment;
-            if (start >= end) {
-              setCount(end);
-              clearInterval(timer);
-            } else {
-              setCount(Math.floor(start));
-            }
-          }, 16);
+        if (!entry.isIntersecting || hasAnimated.current) return;
+        hasAnimated.current = true;
+        observer.disconnect();
+
+        if (reduceMotion) {
+          setCount(value);
+          return;
         }
+
+        const duration = 1400;
+        const startedAt = performance.now();
+        const tick = (now: number) => {
+          const progress = Math.min((now - startedAt) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const next = Math.round(eased * value);
+          setCount(next >= value ? value : next);
+
+          if (progress < 1) {
+            rafId.current = requestAnimationFrame(tick);
+          } else {
+            setCount(value);
+          }
+        };
+
+        rafId.current = requestAnimationFrame(tick);
       },
       { threshold: 0.1 }
     );
     observer.observe(ref);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (rafId.current) {
+        cancelAnimationFrame(rafId.current);
+      }
+    };
   }, [ref, value]);
 
   return <span ref={setRef}>{count.toLocaleString()}+</span>;
@@ -45,10 +63,36 @@ const Counter = ({ value }: { value: number }) => {
 
 const HeroSection = () => {
   const [showPopup, setShowPopup] = useState(false);
+  const yellowPopupTimerRef = useRef<number | null>(null);
+
+  const closeYellowPopup = () => {
+    setShowPopup(false);
+    (window as Window & { __desktopPopupVisible?: boolean }).__desktopPopupVisible = false;
+    window.dispatchEvent(new CustomEvent("desktop-popup-closed"));
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowPopup(true), 3000);
-    return () => clearTimeout(timer);
+    if (window.innerWidth < 1024) return;
+
+    const kickoff = window.setTimeout(() => {
+      const state = window as Window & { __desktopPopupVisible?: boolean };
+      if (state.__desktopPopupVisible) return;
+
+      state.__desktopPopupVisible = true;
+      setShowPopup(true);
+
+      yellowPopupTimerRef.current = window.setTimeout(() => {
+        closeYellowPopup();
+      }, 3000);
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(kickoff);
+      if (yellowPopupTimerRef.current) {
+        window.clearTimeout(yellowPopupTimerRef.current);
+      }
+      (window as Window & { __desktopPopupVisible?: boolean }).__desktopPopupVisible = false;
+    };
   }, []);
 
   return (
@@ -107,14 +151,20 @@ const HeroSection = () => {
                 className="w-full h-full object-cover object-[75%_center]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F1E] via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 bg-[#0A0F1E]/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/10">
-                  <ShieldCheck className="text-plumb-yellow" size={16} />
-                  <span className="text-white text-[10px] font-bold uppercase tracking-widest">Licensed & Insured</span>
-                </div>
-                <div className="flex items-center gap-2 bg-plumb-yellow px-3 py-1.5 rounded-lg shadow-lg">
-                  <Clock className="text-plumb-deep" size={16} />
-                  <span className="text-plumb-deep text-[10px] font-black uppercase tracking-widest">30 Min Arrival</span>
+              <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                  <div className="min-h-[42px] sm:min-h-[46px] flex items-center gap-2 rounded-xl border border-white/15 bg-[#0A0F1E]/85 px-3 py-2 backdrop-blur-md shadow-lg">
+                    <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5 text-plumb-yellow shrink-0" />
+                    <span className="text-white text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.08em] leading-tight">
+                      Licensed & Insured
+                    </span>
+                  </div>
+                  <div className="min-h-[42px] sm:min-h-[46px] flex items-center gap-2 rounded-xl bg-plumb-yellow px-3 py-2 shadow-lg">
+                    <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-plumb-deep shrink-0" />
+                    <span className="text-plumb-deep text-[10px] sm:text-[11px] font-black uppercase tracking-[0.08em] leading-tight">
+                      30 Min Arrival
+                    </span>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -188,7 +238,7 @@ const HeroSection = () => {
             >
               <div className="relative shrink-0">
                 <div className="bg-plumb-yellow p-2.5 sm:p-3 rounded-full animate-ring-shake">
-                  <Phone className="text-[#0A0F1E] fill-[#0A0F1E]" size={20} sm:size={24} />
+                  <Phone className="text-[#0A0F1E] fill-[#0A0F1E] w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
                 <div className="absolute inset-0 bg-plumb-yellow rounded-full animate-ping opacity-50" />
               </div>
@@ -248,8 +298,13 @@ const HeroSection = () => {
               <span className="font-black text-sm uppercase leading-none">Just Arrived</span>
               <span className="text-xs font-bold opacity-80 mt-1 truncate">Plumber on route — Fort Worth, TX</span>
             </div>
-            <button 
-              onClick={() => setShowPopup(false)}
+            <button
+              onClick={() => {
+                if (yellowPopupTimerRef.current) {
+                  window.clearTimeout(yellowPopupTimerRef.current);
+                }
+                closeYellowPopup();
+              }}
               className="ml-auto p-1 text-plumb-deep/60 hover:text-plumb-deep transition-colors"
             >
               <X size={16} />

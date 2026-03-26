@@ -4,52 +4,110 @@ import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { COMPANY } from "@/lib/constants";
 import { fadeUp, staggerContainer } from "@/lib/animations";
 
+type CalApi = ((...args: unknown[]) => void) & {
+  loaded?: boolean;
+  q?: unknown[];
+  ns?: Record<string, CalApi>;
+};
+
+let calBootstrapPromise: Promise<void> | null = null;
+
+const ensureCalBootstrap = () => {
+  if (typeof window === "undefined") return Promise.resolve();
+  if (calBootstrapPromise) return calBootstrapPromise;
+
+  calBootstrapPromise = new Promise((resolve) => {
+    const C = window as Window & { Cal?: CalApi };
+    const A = "https://app.cal.com/embed/embed.js";
+    const L = "init";
+    const p = (a: CalApi, ar: IArguments | unknown[]) => {
+      a.q = a.q || [];
+      a.q.push(ar);
+    };
+    const d = document;
+
+    C.Cal = C.Cal || function () {
+      const cal = C.Cal as CalApi;
+      const ar = arguments;
+
+      if (!cal.loaded) {
+        cal.ns = {};
+        cal.q = cal.q || [];
+        const script = d.querySelector('script[src="https://app.cal.com/embed/embed.js"]') as HTMLScriptElement | null
+          ?? d.createElement("script");
+        if (!script.src) {
+          script.src = A;
+          script.async = true;
+          script.onload = () => resolve();
+          d.head.appendChild(script);
+        } else {
+          if ((script as HTMLScriptElement).dataset.calReady === "true") {
+            resolve();
+          } else {
+            script.addEventListener("load", () => resolve(), { once: true });
+          }
+        }
+        script.addEventListener("load", () => {
+          script.dataset.calReady = "true";
+        }, { once: true });
+        cal.loaded = true;
+      }
+
+      if (ar[0] === L) {
+        const api = function () {
+          p(api as CalApi, arguments);
+        } as CalApi;
+        const namespace = ar[1];
+        api.q = api.q || [];
+        if (typeof namespace === "string") {
+          cal.ns = cal.ns || {};
+          cal.ns[namespace] = cal.ns[namespace] || api;
+          p(cal.ns[namespace], ar);
+          p(cal, ["initNamespace", namespace]);
+        } else {
+          p(cal, ar);
+        }
+        return;
+      }
+
+      p(cal, ar);
+    };
+
+    if (C.Cal.loaded) {
+      resolve();
+    } else {
+      C.Cal(L);
+    }
+  });
+
+  return calBootstrapPromise;
+};
+
 const BookingSection = () => {
   useEffect(() => {
     let isMounted = true;
+    const namespace = "quick-website-walkthrough";
+    const embedId = "my-cal-inline-quick-website-walkthrough";
+    const target = document.getElementById(embedId);
+    if (!target) return;
+    const alreadyInitialized = target.dataset.calInitialized === "true" && target.childElementCount > 0;
+    if (alreadyInitialized) return;
 
     const initCal = async () => {
       if (typeof window === "undefined") return;
-
-      // Official Cal.com embed snippet
-      (function (C, A, L) {
-        let p = function (a, ar) { a.q.push(ar); };
-        let d = C.document;
-        C.Cal = C.Cal || function () {
-          let cal = C.Cal;
-          let ar = arguments;
-          if (!cal.loaded) {
-            cal.ns = {};
-            cal.q = cal.q || [];
-            d.head.appendChild(d.createElement("script")).src = A;
-            cal.loaded = true;
-          }
-          if (ar[0] === L) {
-            const api = function () { p(api, arguments); };
-            const namespace = ar[1];
-            api.q = api.q || [];
-            if (typeof namespace === "string") {
-              cal.ns[namespace] = cal.ns[namespace] || api;
-              p(cal.ns[namespace], ar);
-              p(cal, ["initNamespace", namespace]);
-            } else p(cal, ar);
-            return;
-          }
-          p(cal, ar);
-        };
-      })(window, "https://app.cal.com/embed/embed.js", "init");
+      await ensureCalBootstrap();
 
       if (window.Cal && isMounted) {
         try {
-          window.Cal("init", "15-min-meeting", { origin: "https://app.cal.com" });
-
-          window.Cal.ns["15-min-meeting"]("inline", {
-            elementOrSelector: "#my-cal-inline-15-min-meeting",
-            config: { "layout": "month_view", "useSlotsViewOnSmallScreen": "true" },
-            calLink: "alitheplumber/15-min-meeting",
+          target.innerHTML = "";
+          window.Cal("init", namespace, { origin: "https://app.cal.com" });
+          window.Cal.ns[namespace]("inline", {
+            elementOrSelector: `#${embedId}`,
+            config: { layout: "month_view", useSlotsViewOnSmallScreen: true },
+            calLink: "alitheplumber/quick-website-walkthrough"
           });
-
-          window.Cal.ns["15-min-meeting"]("ui", { "hideEventTypeDetails": false, "layout": "month_view" });
+          window.Cal.ns[namespace]("ui", { "hideEventTypeDetails": false, "layout": "month_view" });
+          target.dataset.calInitialized = "true";
         } catch (e) {
           console.warn("Cal.com initialization failed", e);
         }
@@ -60,8 +118,6 @@ const BookingSection = () => {
 
     return () => {
       isMounted = false;
-      // Note: Cal.com embed doesn't provide a clean "destroy" for inline yet, 
-      // but preventing multiple inits via isMounted/script check helps stability.
     };
   }, []);
 
@@ -89,8 +145,8 @@ const BookingSection = () => {
           >
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 min-h-[500px] sm:min-h-[700px] w-full">
               <div 
-                style={{ width: "100%", height: "700px", overflow: "hidden" }} 
-                id="my-cal-inline-15-min-meeting"
+                style={{ width: "100%", minHeight: "700px", overflow: "auto" }}
+                id="my-cal-inline-quick-website-walkthrough"
                 className="cal-embed-container"
               ></div>
             </div>

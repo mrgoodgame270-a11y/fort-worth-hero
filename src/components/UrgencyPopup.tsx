@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Bell, User, PhoneCall, Zap, X } from "lucide-react";
 
 const notifications = [
@@ -12,24 +12,61 @@ const notifications = [
 const UrgencyPopup = () => {
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(false);
+  const showTimerRef = useRef<number | null>(null);
+  const hideTimerRef = useRef<number | null>(null);
+
+  const clearTimers = useCallback(() => {
+    if (showTimerRef.current) {
+      window.clearTimeout(showTimerRef.current);
+      showTimerRef.current = null;
+    }
+    if (hideTimerRef.current) {
+      window.clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+  }, []);
+
+  const scheduleNextPopup = useCallback(() => {
+    if (window.innerWidth < 1024) return;
+    const randomDelay = Math.floor(Math.random() * (120000 - 60000 + 1)) + 60000; // 60-120 seconds
+
+    showTimerRef.current = window.setTimeout(() => {
+      const state = window as Window & { __desktopPopupVisible?: boolean };
+      if (state.__desktopPopupVisible) {
+        scheduleNextPopup();
+        return;
+      }
+
+      state.__desktopPopupVisible = true;
+      setIndex((prev) => (prev + 1) % notifications.length);
+      setVisible(true);
+
+      hideTimerRef.current = window.setTimeout(() => {
+        setVisible(false);
+        state.__desktopPopupVisible = false;
+        window.dispatchEvent(new CustomEvent("desktop-popup-closed"));
+        scheduleNextPopup();
+      }, 4000);
+    }, randomDelay);
+  }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setVisible(true);
-      
-      const hideTimeout = setTimeout(() => {
-        setVisible(false);
-        // Move to next after hiding
-        setTimeout(() => {
-          setIndex((prev) => (prev + 1) % notifications.length);
-        }, 500);
-      }, 4000); // Show for 4 seconds
+    if (window.innerWidth < 1024) return;
+    const onPopupClosed = () => {
+      if (!showTimerRef.current) {
+        scheduleNextPopup();
+      }
+    };
 
-      return () => clearTimeout(hideTimeout);
-    }, 10000); // Repeat every 10 seconds
+    window.addEventListener("desktop-popup-closed", onPopupClosed);
+    scheduleNextPopup();
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      clearTimers();
+      window.removeEventListener("desktop-popup-closed", onPopupClosed);
+      (window as Window & { __desktopPopupVisible?: boolean }).__desktopPopupVisible = false;
+    };
+  }, [clearTimers, scheduleNextPopup]);
 
   const current = notifications[index];
 
@@ -54,7 +91,13 @@ const UrgencyPopup = () => {
             </p>
           </div>
           <button 
-            onClick={() => setVisible(false)}
+            onClick={() => {
+              setVisible(false);
+              clearTimers();
+              (window as Window & { __desktopPopupVisible?: boolean }).__desktopPopupVisible = false;
+              window.dispatchEvent(new CustomEvent("desktop-popup-closed"));
+              scheduleNextPopup();
+            }}
             className="shrink-0 p-1 text-gray-300 hover:text-gray-600 transition-colors"
           >
             <X size={16} />

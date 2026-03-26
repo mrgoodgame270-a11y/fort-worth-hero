@@ -12,23 +12,40 @@ const Counter = ({ value, suffix, isDecimal }: { value: number; suffix: string; 
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
   const [count, setCount] = useState(0);
+  const frameRef = useRef<number | null>(null);
+  const hasAnimatedRef = useRef(false);
 
   useEffect(() => {
-    if (!inView) return;
-    const duration = 2000;
-    const start = Date.now();
-    const step = () => {
-      const elapsed = Date.now() - start;
+    if (!inView || hasAnimatedRef.current) return;
+
+    hasAnimatedRef.current = true;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      setCount(value);
+      return;
+    }
+
+    const duration = 1400;
+    const startedAt = performance.now();
+    const step = (now: number) => {
+      const elapsed = now - startedAt;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(eased * value);
       if (progress < 1) {
-        requestAnimationFrame(step);
+        frameRef.current = requestAnimationFrame(step);
       } else {
         setCount(value);
       }
     };
-    requestAnimationFrame(step);
+
+    frameRef.current = requestAnimationFrame(step);
+
+    return () => {
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
   }, [inView, value]);
 
   return (
