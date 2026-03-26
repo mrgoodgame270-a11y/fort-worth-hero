@@ -4,6 +4,8 @@ import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { COMPANY } from "@/lib/constants";
 import { fadeUp, staggerContainer } from "@/lib/animations";
 
+const GOOGLE_MAPS_PROFILE_URL = "https://www.google.com/maps/place/United+Plumbing+Solutions/@32.924385,-97.3340297,17z/data=!4m14!1m7!3m6!1s0x864dd920533e47ad:0xd91cc7c2fe57358b!2sUnited+Plumbing+Solutions!8m2!3d32.9243805!4d-97.3314548!16s%2Fg%2F11h4kp6953!3m5!1s0x864dd920533e47ad:0xd91cc7c2fe57358b!8m2!3d32.9243805!4d-97.3314548!16s%2Fg%2F11h4kp6953?entry=ttu&g_ep=EgoyMDI2MDMyMy4xIKXMDSoASAFQAw%3D%3D";
+
 type CalApi = ((...args: unknown[]) => void) & {
   loaded?: boolean;
   q?: unknown[];
@@ -169,7 +171,17 @@ const BookingSection = () => {
                 </div>
               </div>
               <div className="space-y-4 text-sm">
-                <div className="flex items-start gap-3"><MapPin size={18} className="text-plumb-yellow mt-0.5" /><span className="text-plumb-deep/70">{COMPANY.address}</span></div>
+                <div className="flex items-start gap-3">
+                  <MapPin size={18} className="text-plumb-yellow mt-0.5" />
+                  <a
+                    href={GOOGLE_MAPS_PROFILE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-plumb-deep/70 hover:text-plumb-yellow transition-colors"
+                  >
+                    {COMPANY.address}
+                  </a>
+                </div>
                 <div className="flex items-center gap-3"><Phone size={18} className="text-plumb-yellow" /><a href={COMPANY.phoneTel} className="text-plumb-deep/70 hover:text-plumb-yellow transition-colors">{COMPANY.phone}</a></div>
                 <div className="flex items-center gap-3"><Mail size={18} className="text-plumb-yellow" /><span className="text-plumb-deep/70">{COMPANY.email}</span></div>
                 <div className="flex items-center gap-3"><Clock size={18} className="text-plumb-yellow" /><span className="text-plumb-deep/70 font-semibold">24/7 — We Never Close</span></div>
