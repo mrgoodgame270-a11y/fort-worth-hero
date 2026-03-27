@@ -15,7 +15,7 @@ const WhyUsSection = () => (
     <div className="container mx-auto px-4">
       <div className="grid lg:grid-cols-5 gap-12 items-start">
         {/* Left */}
-        <motion.div className="lg:col-span-3" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+        <motion.div className="lg:col-span-3" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px 0px 220px 0px" }}>
           <motion.span variants={fadeUp} className="text-plumb-yellow text-sm font-bold uppercase tracking-[0.15em]">Why PlumbHero</motion.span>
           <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mt-3 mb-4">
             Fort Worth Trusts Us Because We Show Up — Every Single Time.
@@ -48,7 +48,7 @@ const WhyUsSection = () => (
           className="lg:col-span-2"
           initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "0px 0px 220px 0px" }}
           transition={{ duration: 0.7 }}
         >
           <div className="bg-white rounded-3xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.4)] hover:rotate-0 transition-transform duration-300" style={{ transform: "rotate(-2deg)" }}>

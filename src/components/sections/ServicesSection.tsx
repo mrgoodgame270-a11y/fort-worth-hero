@@ -22,6 +22,7 @@ const ServiceCard = ({ service, index }: { service: any; index: number }) => {
           onError={() => setImgSrc(FALLBACK_IMAGE)}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-plumb-deep/80 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
         <div className="absolute bottom-4 left-6 bg-plumb-yellow p-2.5 sm:p-3 rounded-2xl shadow-lg">
@@ -55,7 +56,7 @@ const ServicesSection = () => (
         className="text-center mb-20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true }}
+        viewport={{ once: true, margin: "0px 0px 220px 0px" }}
         variants={staggerContainer}
       >
         <motion.span variants={fadeUp} className="text-plumb-yellow text-sm font-bold uppercase tracking-[0.2em]">Our Specializations</motion.span>
@@ -72,7 +73,7 @@ const ServicesSection = () => (
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true }}
+        viewport={{ once: true, margin: "0px 0px 220px 0px" }}
       >
         {SERVICES.map((service, i) => (
           <ServiceCard key={i} service={service} index={i} />

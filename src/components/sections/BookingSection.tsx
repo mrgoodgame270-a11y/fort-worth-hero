@@ -88,10 +88,12 @@ const ensureCalBootstrap = () => {
 const BookingSection = () => {
   useEffect(() => {
     let isMounted = true;
+    let observer: IntersectionObserver | null = null;
     const namespace = "quick-website-walkthrough";
     const embedId = "my-cal-inline-quick-website-walkthrough";
+    const section = document.getElementById("booking");
     const target = document.getElementById(embedId);
-    if (!target) return;
+    if (!target || !section) return;
     const alreadyInitialized = target.dataset.calInitialized === "true" && target.childElementCount > 0;
     if (alreadyInitialized) return;
 
@@ -116,10 +118,32 @@ const BookingSection = () => {
       }
     };
 
-    initCal();
+    const scheduleInit = () => {
+      if ("requestIdleCallback" in window) {
+        (window as Window & { requestIdleCallback: (callback: IdleRequestCallback) => number })
+          .requestIdleCallback(() => {
+            void initCal();
+          });
+        return;
+      }
+      window.setTimeout(() => {
+        void initCal();
+      }, 0);
+    };
+
+    observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        scheduleInit();
+        observer?.disconnect();
+      },
+      { rootMargin: "0px 0px 450px 0px", threshold: 0.01 }
+    );
+    observer.observe(section);
 
     return () => {
       isMounted = false;
+      observer?.disconnect();
     };
   }, []);
 
@@ -127,11 +151,11 @@ const BookingSection = () => {
     <section id="booking" className="bg-plumb-soft py-20 md:py-28">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <motion.span initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-plumb-yellow text-sm font-bold uppercase tracking-[0.15em]">Book Now</motion.span>
-          <motion.h2 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-4xl md:text-6xl font-black text-plumb-deep tracking-tight mt-3 mb-2">
+          <motion.span initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px 0px 200px 0px" }} variants={fadeUp} className="text-plumb-yellow text-sm font-bold uppercase tracking-[0.15em]">Book Now</motion.span>
+          <motion.h2 initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px 0px 200px 0px" }} variants={fadeUp} className="text-4xl md:text-6xl font-black text-plumb-deep tracking-tight mt-3 mb-2">
             Schedule My Plumber
           </motion.h2>
-          <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-plumb-deep/60 text-lg">
+          <motion.p initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px 0px 200px 0px" }} variants={fadeUp} className="text-plumb-deep/60 text-lg">
             Choose a time that works for you — We'll confirm instantly.
           </motion.p>
         </div>
@@ -142,7 +166,7 @@ const BookingSection = () => {
             className="lg:col-span-8 w-full"
             initial="hidden" 
             whileInView="visible" 
-            viewport={{ once: true }} 
+            viewport={{ once: true, margin: "0px 0px 220px 0px" }} 
             variants={staggerContainer}
           >
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 min-h-[500px] sm:min-h-[700px] w-full">
@@ -159,7 +183,7 @@ const BookingSection = () => {
             className="lg:col-span-4 flex flex-col gap-6"
             initial={{ opacity: 0, y: 20 }} 
             whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }} 
+            viewport={{ once: true, margin: "0px 0px 220px 0px" }} 
             transition={{ duration: 0.7 }}
           >
             <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">

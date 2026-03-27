@@ -10,10 +10,11 @@ const stats = [
 
 const Counter = ({ value, suffix, isDecimal }: { value: number; suffix: string; isDecimal?: boolean }) => {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
+  const inView = useInView(ref, { once: true, margin: "0px 0px 220px 0px", amount: 0.2 });
   const [count, setCount] = useState(0);
   const frameRef = useRef<number | null>(null);
   const hasAnimatedRef = useRef(false);
+  const lastDisplayRef = useRef<string>("");
 
   useEffect(() => {
     if (!inView || hasAnimatedRef.current) return;
@@ -31,7 +32,12 @@ const Counter = ({ value, suffix, isDecimal }: { value: number; suffix: string; 
       const elapsed = now - startedAt;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(eased * value);
+      const nextValue = eased * value;
+      const nextDisplay = isDecimal ? nextValue.toFixed(1) : Math.floor(nextValue).toString();
+      if (nextDisplay !== lastDisplayRef.current) {
+        lastDisplayRef.current = nextDisplay;
+        setCount(nextValue);
+      }
       if (progress < 1) {
         frameRef.current = requestAnimationFrame(step);
       } else {
@@ -60,19 +66,12 @@ const StatsBar = () => (
     <div className="container mx-auto px-4">
       <div className="flex flex-wrap justify-center items-center gap-8 md:gap-0 md:divide-x md:divide-plumb-deep/20">
         {stats.map((s) => (
-          <motion.div
-            key={s.label}
-            className="flex flex-col items-center px-8 md:px-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <div key={s.label} className="flex flex-col items-center px-8 md:px-12">
             <Counter value={s.value} suffix={s.suffix} isDecimal={s.isDecimal} />
             <span className="text-plumb-deep/70 text-xs md:text-sm font-semibold uppercase tracking-[0.1em] mt-1">
               {s.label}
             </span>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>
